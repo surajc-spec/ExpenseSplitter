@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const pool = require("./db/db");
 const authRoutes = require("./routes/auth.routes");
+const groupRoutes = require("./routes/group.routes");
 const cookieParser = require("cookie-parser");
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/groups", groupRoutes);
 
 app.get("/api/health", async (req, res) => {
     try {
