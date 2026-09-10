@@ -144,8 +144,21 @@ const me = async (req, res) => {
         });
     }
 };
+
+const logout = (req, res) =>{
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax"
+    });
+
+    res.status(200).json({
+        message: "Logout successful"
+    });
+}
 module.exports = {
     register,
     login,
-    me
+    me,
+    logout
 };
