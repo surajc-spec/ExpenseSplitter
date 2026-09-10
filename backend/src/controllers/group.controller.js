@@ -368,10 +368,43 @@ const updateMemberRole = async (req, res) => {
         });
     }
 };
+
+const getMyGroups = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        const result = await pool.query(
+            `SELECT
+                g.id,
+                g.name,
+                g.created_by,
+                g.created_at,
+                gm.role
+             FROM group_members gm
+             JOIN groups g
+                 ON g.id = gm.group_id
+             WHERE gm.user_id = $1
+             ORDER BY g.created_at DESC`,
+            [userId]
+        );
+
+        return res.status(200).json({
+            groups: result.rows
+        });
+
+    } catch (error) {
+        console.error("Get my groups error:", error);
+
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+};
 module.exports = {
     createGroup,
     addMember,
     removeMember,
     getMembers,
-    updateMemberRole
+    updateMemberRole,
+    getMyGroups
 };

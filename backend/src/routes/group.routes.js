@@ -29,4 +29,6 @@ router.put(
     authenticate,
     groupController.updateMemberRole
 );
+
+router.get("/", authenticate, groupController.getMyGroups);
 module.exports = router;
