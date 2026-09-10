@@ -10,4 +10,15 @@ router.post(
     expenseController.createExpense
 );
 
+router.get(
+    "/:groupId/expenses",
+    authenticate,
+    expenseController.getGroupExpenses
+);
+
+router.get(
+    "/:groupId/balances",
+    authenticate,
+    expenseController.getGroupBalances
+);
 module.exports = router;

@@ -2,6 +2,7 @@ const pool = require("../db/db");
 const calculateEqualSplit = require("../algorithms/equalSplit");
 const calculateExactSplit = require("../algorithms/exactSplit");
 const calculatePercentageSplit = require("../algorithms/percentageSplit");
+const calculateBalances = require("../algorithms/calculateBalances");
 
 const createExpense = async (req, res) => {
     const client = await pool.connect();
@@ -209,6 +210,137 @@ const createExpense = async (req, res) => {
     }
 };
 
+const getGroupExpenses = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const userId = req.user.userId;
+
+        // Check whether requester is a group member
+        const memberCheck = await pool.query(
+            `SELECT 1
+             FROM group_members
+             WHERE group_id = $1
+             AND user_id = $2`,
+            [groupId, userId]
+        );
+
+        if (memberCheck.rows.length === 0) {
+            return res.status(403).json({
+                message: "You are not a member of this group"
+            });
+        }
+
+        // Get expenses with their splits
+        const result = await pool.query(
+            `SELECT
+                e.id,
+                e.description,
+                e.total_amount,
+                e.split_type,
+                e.paid_by,
+                e.created_at,
+                COALESCE(
+                    json_agg(
+                        json_build_object(
+                            'user_id', es.user_id,
+                            'amount', es.amount
+                        )
+                    ) FILTER (WHERE es.id IS NOT NULL),
+                    '[]'
+                ) AS splits
+             FROM expenses e
+             LEFT JOIN expense_splits es
+                 ON es.expense_id = e.id
+             WHERE e.group_id = $1
+             GROUP BY e.id
+             ORDER BY e.created_at DESC`,
+            [groupId]
+        );
+
+        return res.status(200).json({
+            expenses: result.rows
+        });
+
+    } catch (error) {
+        console.error("Get group expenses error:", error);
+
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+};
+
+const getGroupBalances = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const userId = req.user.userId;
+
+         
+        // 1. CHECK GROUP MEMBERSHIP
+         
+
+        const memberCheck = await pool.query(
+            `SELECT 1
+             FROM group_members
+             WHERE group_id = $1
+             AND user_id = $2`,
+            [groupId, userId]
+        );
+
+        if (memberCheck.rows.length === 0) {
+            return res.status(403).json({
+                message: "You are not a member of this group"
+            });
+        }
+
+         
+        // 2. GET EXPENSES
+         
+
+        const expenseResult = await pool.query(
+            `SELECT
+                e.id,
+                e.total_amount,
+                e.paid_by,
+                COALESCE(
+                    json_agg(
+                        json_build_object(
+                            'user_id', es.user_id,
+                            'amount', es.amount
+                        )
+                    ) FILTER (WHERE es.id IS NOT NULL),
+                    '[]'
+                ) AS splits
+             FROM expenses e
+             LEFT JOIN expense_splits es
+                 ON es.expense_id = e.id
+             WHERE e.group_id = $1
+             GROUP BY e.id`,
+            [groupId]
+        );
+
+         
+        // 3. CALCULATE BALANCES
+         
+
+        const balances = calculateBalances(
+            expenseResult.rows
+        );
+
+        return res.status(200).json({
+            balances
+        });
+
+    } catch (error) {
+        console.error("Get group balances error:", error);
+
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+};
 module.exports = {
-    createExpense
+    createExpense,
+    getGroupExpenses,
+    getGroupBalances
 };
