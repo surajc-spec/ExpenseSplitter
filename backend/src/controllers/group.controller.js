@@ -400,11 +400,179 @@ const getMyGroups = async (req, res) => {
         });
     }
 };
+
+const leaveGroup = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const userId = req.user.userId;
+
+     
+        const memberCheck = await pool.query(
+            `SELECT role
+             FROM group_members
+             WHERE group_id = $1
+             AND user_id = $2`,
+            [groupId, userId]
+        );
+
+        if (memberCheck.rows.length === 0) {
+            return res.status(404).json({
+                message: "You are not a member of this group"
+            });
+        }
+
+        const role = memberCheck.rows[0].role;
+
+      
+        const groupCheck = await pool.query(
+            `SELECT created_by
+             FROM groups
+             WHERE id = $1`,
+            [groupId]
+        );
+
+        if (groupCheck.rows.length === 0) {
+            return res.status(404).json({
+                message: "Group not found"
+            });
+        }
+
+        if (groupCheck.rows[0].created_by === userId) {
+            return res.status(400).json({
+                message: "Group creator cannot leave the group"
+            });
+        }
+
+        
+        if (role === "admin") {
+            const adminCheck = await pool.query(
+                `SELECT COUNT(*) AS count
+                 FROM group_members
+                 WHERE group_id = $1
+                 AND role = 'admin'
+                 AND user_id <> $2`,
+                [groupId, userId]
+            );
+
+            if (parseInt(adminCheck.rows[0].count) === 0) {
+                return res.status(400).json({
+                    message: "You are the only admin. Another admin must exist before you leave."
+                });
+            }
+        }
+
+       
+        await pool.query(
+            `DELETE FROM group_members
+             WHERE group_id = $1
+             AND user_id = $2`,
+            [groupId, userId]
+        );
+
+        return res.status(200).json({
+            message: "You left the group successfully"
+        });
+
+    } catch (error) {
+        console.error("Leave group error:", error);
+
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+};
+
+const transferOwnership = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const { userId: newOwnerId } = req.body;
+
+        const currentOwnerId = req.user.userId;
+
+        if (!newOwnerId) {
+            return res.status(400).json({
+                message: "New owner userId is required"
+            });
+        }
+
+       
+        const groupResult = await pool.query(
+            `SELECT created_by
+             FROM groups
+             WHERE id = $1`,
+            [groupId]
+        );
+
+        if (groupResult.rows.length === 0) {
+            return res.status(404).json({
+                message: "Group not found"
+            });
+        }
+
+        if (groupResult.rows[0].created_by !== currentOwnerId) {
+            return res.status(403).json({
+                message: "Only the group owner can transfer ownership"
+            });
+        }
+
+       
+        if (currentOwnerId === newOwnerId) {
+            return res.status(400).json({
+                message: "You are already the group owner"
+            });
+        }
+
+       
+        const memberResult = await pool.query(
+            `SELECT user_id
+             FROM group_members
+             WHERE group_id = $1
+             AND user_id = $2`,
+            [groupId, newOwnerId]
+        );
+
+        if (memberResult.rows.length === 0) {
+            return res.status(400).json({
+                message: "New owner must be a member of the group"
+            });
+        }
+
+       
+        await pool.query(
+            `UPDATE groups
+             SET created_by = $1
+             WHERE id = $2`,
+            [newOwnerId, groupId]
+        );
+
+        await pool.query(
+            `UPDATE group_members
+             SET role = 'admin'
+             WHERE group_id = $1
+             AND user_id = $2`,
+            [groupId, newOwnerId]
+        );
+
+        return res.status(200).json({
+            message: "Group ownership transferred successfully",
+            newOwnerId
+        });
+
+    } catch (error) {
+        console.error("Transfer ownership error:", error);
+
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+};
 module.exports = {
     createGroup,
     addMember,
     removeMember,
     getMembers,
     updateMemberRole,
-    getMyGroups
+    getMyGroups,
+    leaveGroup,
+    transferOwnership
 };

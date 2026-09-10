@@ -30,5 +30,17 @@ router.put(
     groupController.updateMemberRole
 );
 
+router.delete(
+    "/:groupId/leave",
+    authenticate,
+    groupController.leaveGroup
+);
+
+router.put(
+    "/:groupId/ownership",
+    authenticate,
+    groupController.transferOwnership
+);
+
 router.get("/", authenticate, groupController.getMyGroups);
 module.exports = router;
