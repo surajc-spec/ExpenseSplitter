@@ -26,8 +26,14 @@ export const AddMemberModal = ({ isOpen, onClose, onAddMember }) => {
     }
   };
 
+  const handleClose = () => {
+    setEmail('');
+    setError('');
+    onClose();
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Add Group Member">
+    <Modal isOpen={isOpen} onClose={handleClose} title="Add Group Member">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {error && (
           <div className="p-3 text-xs font-medium text-light-danger dark:text-dark-danger bg-light-danger/10 dark:bg-dark-danger/10 border border-light-danger/20 rounded-badge">
@@ -48,12 +54,12 @@ export const AddMemberModal = ({ isOpen, onClose, onAddMember }) => {
             required
           />
           <p className="text-[11px] text-light-muted dark:text-dark-muted mt-1">
-            User must already have an account on EquiSplit.
+            Enter the registered email of the user to add them to this group.
           </p>
         </div>
 
         <div className="flex justify-end gap-2 pt-2">
-          <Button variant="secondary" onClick={onClose} disabled={loading}>
+          <Button variant="secondary" onClick={handleClose} disabled={loading}>
             Cancel
           </Button>
           <Button type="submit" variant="primary" loading={loading}>

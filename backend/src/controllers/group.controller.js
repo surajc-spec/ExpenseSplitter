@@ -83,11 +83,13 @@ const addMember = async (req, res) => {
         }
 
        
+        const cleanEmail = email.trim().toLowerCase();
+
         const userResult = await pool.query(
             `SELECT id, name, email
              FROM users
-             WHERE email = $1`,
-            [email]
+             WHERE LOWER(email) = $1`,
+            [cleanEmail]
         );
 
         if (userResult.rows.length === 0) {

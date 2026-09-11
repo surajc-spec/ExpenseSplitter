@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card } from '../common/Card';
 import { Badge } from '../common/Badge';
 
-export const GroupCard = ({ group }) => {
+export const GroupCard = ({ group, onAddMemberClick }) => {
   const navigate = useNavigate();
 
   return (
@@ -30,7 +30,20 @@ export const GroupCard = ({ group }) => {
         <span>
           {group.member_count || group.memberCount || 1} {group.member_count === 1 ? 'member' : 'members'}
         </span>
-        <span className="text-primary font-bold">View Details →</span>
+        <div className="flex items-center gap-2">
+          {onAddMemberClick && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddMemberClick(group);
+              }}
+              className="px-2.5 py-1 text-xs font-bold rounded-badge bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+            >
+              + Member
+            </button>
+          )}
+          <span className="text-primary font-bold">View Details →</span>
+        </div>
       </div>
     </Card>
   );

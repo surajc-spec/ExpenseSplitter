@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { GroupCard } from '../components/groups/GroupCard';
 import { CreateGroupModal } from '../components/groups/CreateGroupModal';
+import { AddMemberModal } from '../components/groups/AddMemberModal';
 import { Button } from '../components/common/Button';
 import { LoadingState } from '../components/common/LoadingState';
 import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
 
 export const Groups = () => {
+  const navigate = useNavigate();
   const [groups, setGroups] = useState([]);
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedGroupForMember, setSelectedGroupForMember] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -31,10 +35,31 @@ export const Groups = () => {
     fetchGroups();
   }, []);
 
-  const handleCreateGroup = async (name) => {
+  const handleCreateGroup = async (name, memberEmails = []) => {
     const res = await api.createGroup(name);
+    const newGroupId = res.group?.id;
+
+    if (newGroupId && memberEmails.length > 0) {
+      for (const email of memberEmails) {
+        try {
+          await api.addMember(newGroupId, email);
+        } catch (err) {
+          console.warn(`Could not add member ${email}:`, err);
+        }
+      }
+    }
+
     await fetchGroups();
+    if (newGroupId) {
+      navigate(`/groups/${newGroupId}`);
+    }
     return res;
+  };
+
+  const handleAddMemberToGroup = async (email) => {
+    if (!selectedGroupForMember) return;
+    await api.addMember(selectedGroupForMember.id, email);
+    await fetchGroups();
   };
 
   const filteredGroups = groups.filter((g) =>
@@ -80,7 +105,11 @@ export const Groups = () => {
       ) : filteredGroups.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredGroups.map((group) => (
-            <GroupCard key={group.id} group={group} />
+            <GroupCard
+              key={group.id}
+              group={group}
+              onAddMemberClick={(g) => setSelectedGroupForMember(g)}
+            />
           ))}
         </div>
       ) : groups.length > 0 ? (
@@ -105,6 +134,16 @@ export const Groups = () => {
         onClose={() => setIsModalOpen(false)}
         onCreate={handleCreateGroup}
       />
+
+      {/* Add Member Modal */}
+      {selectedGroupForMember && (
+        <AddMemberModal
+          isOpen={!!selectedGroupForMember}
+          onClose={() => setSelectedGroupForMember(null)}
+          onAddMember={handleAddMemberToGroup}
+        />
+      )}
     </div>
   );
 };
+

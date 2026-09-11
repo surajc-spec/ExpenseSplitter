@@ -235,7 +235,7 @@ const recordSettlement = async (req, res) => {
 
         await client.query(
             `SELECT pg_advisory_xact_lock(
-                hashtextextended($1, 0)
+                hashtext($1::text)
              )`,
             [groupId]
         );
@@ -329,10 +329,11 @@ const recordSettlement = async (req, res) => {
             `SELECT user_id
              FROM group_members
              WHERE group_id = $1
-             AND user_id = ANY($2::uuid[])`,
+             AND (user_id = $2 OR user_id = $3)`,
             [
                 groupId,
-                [fromUser, toUser]
+                fromUser,
+                toUser
             ]
         );
 
@@ -593,14 +594,14 @@ const recordSettlement = async (req, res) => {
                 response_status,
                 response_body
              )
-             VALUES ($1, $2, $3, $4, $5, $6)`,
+             VALUES ($1, $2, $3, $4, $5, $6::jsonb)`,
             [
                 userId,
                 groupId,
                 idempotencyKey,
                 requestHash,
                 201,
-                responseBody
+                JSON.stringify(responseBody)
             ]
         );
 
