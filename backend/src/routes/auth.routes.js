@@ -3,7 +3,10 @@ const authenticate = require("../middleware/auth.middleware");
 
 const express = require("express");
 const router = express.Router();
-
+const {
+    loginRateLimiter,
+    registerRateLimiter
+}  = require("../middleware/rateLimit.middleware");
 
 router.get("/test", (req, res) => {
     res.json({
@@ -12,8 +15,8 @@ router.get("/test", (req, res) => {
 });
 
 
-router.post("/register", authController.register);
-router.post("/login", authController.login);
+router.post("/register",registerRateLimiter, authController.register);
+router.post("/login",loginRateLimiter, authController.login);
 router.post("/logout", authController.logout);
 
 router.get("/me", authenticate, authController.me);

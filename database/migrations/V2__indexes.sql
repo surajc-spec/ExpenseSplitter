@@ -1,6 +1,6 @@
--- ============================================
+--   ==============
 -- Expense Splitter - Database Indexes
--- ============================================
+--   ==============
 
 -- Find all groups a user belongs to
 CREATE INDEX idx_group_members_user_id

@@ -1,14 +1,14 @@
--- ============================================
+--   ==============
 -- Expense Splitter - Initial Database Schema
--- ============================================
+--   ==============
 
 -- UUID generation
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 
--- ============================================
+--   ==============
 -- USERS
--- ============================================
+--   ==============
 
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -28,9 +28,9 @@ CREATE TABLE users (
 );
 
 
--- ============================================
+--   ==============
 -- GROUPS
--- ============================================
+--   ==============
 
 CREATE TABLE groups (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -44,9 +44,9 @@ CREATE TABLE groups (
 );
 
 
--- ============================================
+--   ==============
 -- GROUP MEMBERS
--- ============================================
+--   ==============
 
 CREATE TABLE group_members (
     group_id UUID NOT NULL
@@ -66,9 +66,9 @@ CREATE TABLE group_members (
 );
 
 
--- ============================================
+--   ==============
 -- EXPENSES
--- ============================================
+--   ==============
 
 CREATE TABLE expenses (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -91,9 +91,9 @@ CREATE TABLE expenses (
 );
 
 
--- ============================================
+--   ==============
 -- EXPENSE SPLITS
--- ============================================
+--   ==============
 
 CREATE TABLE expense_splits (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -114,9 +114,9 @@ CREATE TABLE expense_splits (
 );
 
 
--- ============================================
+--   ==============
 -- SETTLEMENTS
--- ============================================
+--   ==============
 
 CREATE TABLE settlements (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -139,9 +139,9 @@ CREATE TABLE settlements (
 );
 
 
--- ============================================
+--   ==============
 -- AUDIT LOGS
--- ============================================
+--   ==============
 
 CREATE TABLE audit_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
