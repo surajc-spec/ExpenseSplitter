@@ -9,56 +9,87 @@ export const Hero = () => {
   const { user } = useAuth();
 
   return (
-    <section className="py-16 md:py-24 text-center px-4 max-w-5xl mx-auto">
-      <div className="inline-flex items-center gap-2 mb-6">
-        <Badge variant="primary">Production-Grade Expense Platform</Badge>
-        <span className="text-xs text-light-muted dark:text-dark-muted font-bold">
-          PostgreSQL & Redis Protected
-        </span>
-      </div>
+    <section className="py-12 md:py-20 px-4 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        {/* Left Side: Copy, User-POV Callouts & Actions */}
+        <div className="lg:col-span-7 text-left">
+        
 
-      <h1 className="text-4xl md:text-6xl font-black text-light-foreground dark:text-dark-foreground tracking-tight leading-tight mb-6">
-        Split Expenses <span className="text-primary">Equitably</span> & Settle Debts Effortlessly
-      </h1>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-light-foreground dark:text-dark-foreground tracking-tight leading-tight mb-6">
+            Split Expenses Equitably & Settle Debts Effortlessly
+          </h1>
 
-      <p className="text-base md:text-lg text-light-muted dark:text-dark-muted max-w-2xl mx-auto mb-8 font-medium">
-        EquiSplit simplifies group finances with equal, exact, and percentage splitting, automated greedy debt consolidation, and ACID-safe transactional settlements.
-      </p>
+          <p className="text-base sm:text-lg text-light-muted dark:text-dark-muted mb-8 font-medium leading-relaxed max-w-2xl">
+            EquiSplit automatically balances group expenses, minimizes the number of transactions needed between friends, and ensures every single payment is 100% accurate and protected.
+          </p>
 
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-        {user ? (
-          <Button size="lg" variant="primary" onClick={() => navigate('/dashboard')}>
-            Go to Your Dashboard →
-          </Button>
-        ) : (
-          <>
-            <Button size="lg" variant="primary" onClick={() => navigate('/register')}>
-              Get Started for Free
-            </Button>
-            <Button size="lg" variant="secondary" onClick={() => navigate('/login')}>
-              Log In to Account
-            </Button>
-          </>
-        )}
-      </div>
+          <div className="flex flex-wrap items-center gap-4 mb-10">
+            {user ? (
+              <Button size="lg" variant="primary" onClick={() => navigate('/dashboard')}>
+                Go to Your Dashboard
+              </Button>
+            ) : (
+              <>
+                <Button size="lg" variant="primary" onClick={() => navigate('/register')}>
+                  Get Started for Free
+                </Button>
+                <Button size="lg" variant="secondary" onClick={() => navigate('/login')}>
+                  Log In to Account
+                </Button>
+              </>
+            )}
+          </div>
 
-      <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-8 border-t border-light-border dark:border-dark-border text-left">
-        <div className="p-3 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border">
-          <p className="text-xs text-light-muted dark:text-dark-muted font-bold uppercase">Debt Minification</p>
-          <p className="text-sm font-black text-light-foreground dark:text-dark-foreground mt-0.5">Greedy Algorithm</p>
+          {/* User-POV Feature Callouts */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 pt-6  border-light-border dark:border-dark-border">
+            <div className="p-3.5 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-card">
+              <p className="text-[11px] text-light-muted dark:text-dark-muted font-bold uppercase tracking-wider">
+                Fewer Payments
+              </p>
+              <p className="text-sm font-black text-light-foreground dark:text-dark-foreground mt-0.5">
+                Smart Debt Optimization
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-card">
+              <p className="text-[11px] text-light-muted dark:text-dark-muted font-bold uppercase tracking-wider">
+                Zero Double-Pay
+              </p>
+              <p className="text-sm font-black text-light-foreground dark:text-dark-foreground mt-0.5">
+                Protected Settlements
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-card">
+              <p className="text-[11px] text-light-muted dark:text-dark-muted font-bold uppercase tracking-wider">
+                100% Precise
+              </p>
+              <p className="text-sm font-black text-light-foreground dark:text-dark-foreground mt-0.5">
+                Zero Rounding Errors
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-card">
+              <p className="text-[11px] text-light-muted dark:text-dark-muted font-bold uppercase tracking-wider">
+                Duplicate-Proof
+              </p>
+              <p className="text-sm font-black text-light-foreground dark:text-dark-foreground mt-0.5">
+                Safe Payment Confirmations
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="p-3 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border">
-          <p className="text-xs text-light-muted dark:text-dark-muted font-bold uppercase">Race Condition Safe</p>
-          <p className="text-sm font-black text-light-foreground dark:text-dark-foreground mt-0.5">Advisory Locks</p>
+
+        {/* Right Side: Vector SVG Illustration */}
+        <div className="lg:col-span-5 relative flex items-center justify-center">
+          <img
+            src="/Money income-bro.svg"
+            alt="EquiSplit Money Income Illustration"
+            className="w-full max-w-md lg:max-w-full h-auto object-contain drop-shadow-xl"
+          />
         </div>
-        <div className="p-3 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border">
-          <p className="text-xs text-light-muted dark:text-dark-muted font-bold uppercase">Financial Accuracy</p>
-          <p className="text-sm font-black text-light-foreground dark:text-dark-foreground mt-0.5">Integer Paise</p>
-        </div>
-        <div className="p-3 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border">
-          <p className="text-xs text-light-muted dark:text-dark-muted font-bold uppercase">Idempotency</p>
-          <p className="text-sm font-black text-light-foreground dark:text-dark-foreground mt-0.5">SHA-256 Hashing</p>
-        </div>
+
       </div>
     </section>
   );

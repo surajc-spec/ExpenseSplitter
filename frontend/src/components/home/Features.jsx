@@ -6,32 +6,32 @@ export const Features = () => {
     {
       title: 'Flexible Split Options',
       description: 'Support for equal distribution, exact rupee splits, and percentage breakdowns for any group expense.',
-      tag: 'Splits',
+      
     },
     {
       title: 'Greedy Debt Minification',
       description: 'Automatically aggregates all debts and minimizes the total number of payment transactions required.',
-      tag: 'Optimization',
+     
     },
     {
       title: 'Advisory Transaction Locks',
       description: 'PostgreSQL advisory transaction locking prevents parallel race conditions and over-settlement.',
-      tag: 'Concurrency',
+     
     },
     {
       title: 'Idempotent Settlements',
       description: 'Every settlement submission requires a unique Idempotency-Key with SHA-256 request payload verification.',
-      tag: 'Safety',
+     
     },
     {
       title: 'Full Audit Trail',
       description: 'Immutable transactional audit logging tracks every financial settlement with structured JSONB metadata.',
-      tag: 'Auditing',
+      
     },
     {
       title: 'Redis Rate Protection',
       description: 'Fixed-window IP rate limiting protects authentication and financial endpoints against brute-force attacks.',
-      tag: 'Security',
+     
     },
   ];
 
@@ -51,9 +51,7 @@ export const Features = () => {
           {featureList.map((f, idx) => (
             <Card key={idx} className="flex flex-col justify-between gap-4">
               <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-primary bg-primary/10 px-2 py-1 rounded-badge inline-block mb-3">
-                  {f.tag}
-                </span>
+            
                 <h3 className="text-lg font-bold text-light-foreground dark:text-dark-foreground mb-2">
                   {f.title}
                 </h3>

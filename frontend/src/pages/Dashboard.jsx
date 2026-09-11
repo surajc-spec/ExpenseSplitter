@@ -113,129 +113,201 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Welcome Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div className="flex flex-col gap-8 pb-8">
+      {/* Header & Quick Action Bar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-light-surface dark:bg-dark-surface p-6 rounded-card border border-light-border dark:border-dark-border shadow-card">
         <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-light-foreground dark:text-dark-foreground tracking-tight">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-badge">
+              Overview
+            </span>
+            <span className="text-xs text-light-muted dark:text-dark-muted font-semibold">
+              Live Balance Summary
+            </span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-black text-light-foreground dark:text-dark-foreground tracking-tight">
             Financial Dashboard
           </h1>
-          <p className="text-xs md:text-sm text-light-muted dark:text-dark-muted mt-0.5">
+          <p className="text-xs md:text-sm text-light-muted dark:text-dark-muted mt-1">
             Welcome back, <span className="font-bold text-light-foreground dark:text-dark-foreground">{user?.name || user?.email}</span>
           </p>
         </div>
 
-        <Button variant="primary" onClick={() => navigate('/groups')}>
-          + Create or Join Group
-        </Button>
+        {/* Action Buttons */}
+        <div className="flex flex-wrap items-center gap-3">
+          <Button variant="secondary" size="sm" onClick={() => navigate('/expenses')}>
+            + Log Expense
+          </Button>
+          <Button variant="primary" size="sm" onClick={() => navigate('/groups')}>
+            + New Group
+          </Button>
+        </div>
       </div>
 
-      {/* Overview Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="flex flex-col gap-1 border-l-4 border-l-primary">
-          <span className="text-xs font-bold text-light-muted dark:text-dark-muted uppercase tracking-wider">
-            Net Balance
-          </span>
-          <span
-            className={`text-2xl font-black tracking-tight ${
-              netBalancePaise > 0
-                ? 'text-light-success dark:text-dark-success'
-                : netBalancePaise < 0
-                ? 'text-light-danger dark:text-dark-danger'
-                : 'text-light-foreground dark:text-dark-foreground'
-            }`}
-          >
-            {formatRupees(netBalancePaise)}
-          </span>
-          <span className="text-[11px] text-light-muted dark:text-dark-muted">
-            {netBalancePaise > 0 ? 'You get back overall' : netBalancePaise < 0 ? 'You owe overall' : 'Settled up'}
-          </span>
+      {/* 4 Financial Stat Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* Net Balance Card */}
+        <Card className="flex flex-col justify-between gap-3 border-l-4 border-l-primary hover:shadow-card-hover transition-all">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-light-muted dark:text-dark-muted uppercase tracking-wider">
+              Net Balance
+            </span>
+            <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
+              </svg>
+            </div>
+          </div>
+          <div>
+            <span
+              className={`text-2xl lg:text-3xl font-black tracking-tight block ${
+                netBalancePaise > 0
+                  ? 'text-light-success dark:text-dark-success'
+                  : netBalancePaise < 0
+                  ? 'text-light-danger dark:text-dark-danger'
+                  : 'text-light-foreground dark:text-dark-foreground'
+              }`}
+            >
+              {formatRupees(netBalancePaise)}
+            </span>
+            <span className="text-xs text-light-muted dark:text-dark-muted font-medium mt-1 block">
+              {netBalancePaise > 0 ? 'You get back overall' : netBalancePaise < 0 ? 'You owe overall' : 'All balances settled'}
+            </span>
+          </div>
         </Card>
 
-        <Card className="flex flex-col gap-1 border-l-4 border-l-light-success dark:border-l-dark-success">
-          <span className="text-xs font-bold text-light-muted dark:text-dark-muted uppercase tracking-wider">
-            You are Owed
-          </span>
-          <span className="text-2xl font-black text-light-success dark:text-dark-success tracking-tight">
-            {formatRupees(totalOwedToUserPaise)}
-          </span>
-          <span className="text-[11px] text-light-muted dark:text-dark-muted">
-            Total pending receivables
-          </span>
+        {/* You Are Owed Card */}
+        <Card className="flex flex-col justify-between gap-3 border-l-4 border-l-light-success dark:border-l-dark-success hover:shadow-card-hover transition-all">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-light-muted dark:text-dark-muted uppercase tracking-wider">
+              You are Owed
+            </span>
+            <div className="w-8 h-8 rounded-full bg-light-success/10 text-light-success dark:text-dark-success flex items-center justify-center">
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M9 5v2h6.59L4 18.59 5.41 20 17 8.41V15h2V5H9z" />
+              </svg>
+            </div>
+          </div>
+          <div>
+            <span className="text-2xl lg:text-3xl font-black text-light-success dark:text-dark-success tracking-tight block">
+              {formatRupees(totalOwedToUserPaise)}
+            </span>
+            <span className="text-xs text-light-muted dark:text-dark-muted font-medium mt-1 block">
+              Total pending receivables
+            </span>
+          </div>
         </Card>
 
-        <Card className="flex flex-col gap-1 border-l-4 border-l-light-danger dark:border-l-dark-danger">
-          <span className="text-xs font-bold text-light-muted dark:text-dark-muted uppercase tracking-wider">
-            You Owe
-          </span>
-          <span className="text-2xl font-black text-light-danger dark:text-dark-danger tracking-tight">
-            {formatRupees(totalUserOwesPaise)}
-          </span>
-          <span className="text-[11px] text-light-muted dark:text-dark-muted">
-            Total pending payables
-          </span>
+        {/* You Owe Card */}
+        <Card className="flex flex-col justify-between gap-3 border-l-4 border-l-light-danger dark:border-l-dark-danger hover:shadow-card-hover transition-all">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-light-muted dark:text-dark-muted uppercase tracking-wider">
+              You Owe
+            </span>
+            <div className="w-8 h-8 rounded-full bg-light-danger/10 text-light-danger dark:text-dark-danger flex items-center justify-center">
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M20 5.41L18.59 4 7 15.59V9H5v10h10v-2H8.41L20 5.41z" />
+              </svg>
+            </div>
+          </div>
+          <div>
+            <span className="text-2xl lg:text-3xl font-black text-light-danger dark:text-dark-danger tracking-tight block">
+              {formatRupees(totalUserOwesPaise)}
+            </span>
+            <span className="text-xs text-light-muted dark:text-dark-muted font-medium mt-1 block">
+              Total pending payables
+            </span>
+          </div>
         </Card>
 
-        <Card className="flex flex-col gap-1 border-l-4 border-l-light-warning dark:border-l-dark-warning">
-          <span className="text-xs font-bold text-light-muted dark:text-dark-muted uppercase tracking-wider">
-            Active Groups
-          </span>
-          <span className="text-2xl font-black text-light-foreground dark:text-dark-foreground tracking-tight">
-            {groups.length}
-          </span>
-          <span className="text-[11px] text-light-muted dark:text-dark-muted">
-            Groups joined
-          </span>
+        {/* Active Groups Card */}
+        <Card className="flex flex-col justify-between gap-3 border-l-4 border-l-light-warning dark:border-l-dark-warning hover:shadow-card-hover transition-all">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-light-muted dark:text-dark-muted uppercase tracking-wider">
+              Active Groups
+            </span>
+            <div className="w-8 h-8 rounded-full bg-light-warning/10 text-light-warning dark:text-dark-warning flex items-center justify-center">
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+              </svg>
+            </div>
+          </div>
+          <div>
+            <span className="text-2xl lg:text-3xl font-black text-light-foreground dark:text-dark-foreground tracking-tight block">
+              {groups.length}
+            </span>
+            <span className="text-xs text-light-muted dark:text-dark-muted font-medium mt-1 block">
+              Joined expense groups
+            </span>
+          </div>
         </Card>
       </div>
 
-      {/* Main Grid: Chart & Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: Analytics Chart & Groups */}
-        <div className="lg:col-span-2 flex flex-col gap-6">
+      {/* Main Grid: Spending Analytics & Groups / Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        {/* Left Column: Spending Analytics & Active Groups List */}
+        <div className="lg:col-span-7 flex flex-col gap-6">
+          {/* Analytics Chart */}
           <Card>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-light-foreground dark:text-dark-foreground">
-                Group Spending Overview
-              </h3>
-              <Badge variant="primary">Real API Data</Badge>
+              <div>
+                <h2 className="text-lg font-bold text-light-foreground dark:text-dark-foreground">
+                  Group Spending Distribution
+                </h2>
+                <p className="text-xs text-light-muted dark:text-dark-muted">
+                  Total expense allocation across your active groups
+                </p>
+              </div>
+              <Badge variant="primary">Analytics</Badge>
             </div>
+            
             {chartData.length > 0 ? (
               <FinancialOverviewChart groupsData={chartData} />
             ) : (
               <EmptyState
-                title="No Group Spending Yet"
+                title="No Group Spending Data"
                 description="Add expenses to your groups to view real-time spending distribution."
               />
             )}
           </Card>
 
-          {/* Quick Groups List */}
+          {/* Joined Groups List */}
           <Card>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-light-foreground dark:text-dark-foreground">
-                Your Groups ({groups.length})
-              </h3>
-              <Button size="sm" variant="ghost" onClick={() => navigate('/groups')}>
-                View All →
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-light-border dark:border-dark-border">
+              <div>
+                <h2 className="text-lg font-bold text-light-foreground dark:text-dark-foreground">
+                  Your Expense Groups ({groups.length})
+                </h2>
+                <p className="text-xs text-light-muted dark:text-dark-muted">
+                  Manage members, expenses, and settlements
+                </p>
+              </div>
+              <Button size="sm" variant="secondary" onClick={() => navigate('/groups')}>
+                View All Groups
               </Button>
             </div>
 
             {groups.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 {groups.slice(0, 4).map((g) => (
                   <div
                     key={g.id}
                     onClick={() => navigate(`/groups/${g.id}`)}
-                    className="p-3.5 rounded-card bg-light-surface-secondary dark:bg-dark-surface-secondary border border-light-border dark:border-dark-border cursor-pointer hover:border-primary transition-all flex items-center justify-between"
+                    className="p-4 rounded-card bg-light-surface-secondary dark:bg-dark-surface-secondary border border-light-border dark:border-dark-border cursor-pointer hover:border-primary transition-all flex items-center justify-between group"
                   >
-                    <div>
-                      <h4 className="text-sm font-bold text-light-foreground dark:text-dark-foreground">
-                        {g.name}
-                      </h4>
-                      <p className="text-xs text-light-muted dark:text-dark-muted">
-                        {g.member_count || 1} members
-                      </p>
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-primary/10 text-primary font-black text-sm flex items-center justify-center border border-primary/20">
+                        {g.name.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-bold text-light-foreground dark:text-dark-foreground group-hover:text-primary transition-colors">
+                          {g.name}
+                        </h3>
+                        <p className="text-xs text-light-muted dark:text-dark-muted">
+                          {g.member_count || 1} members
+                        </p>
+                      </div>
                     </div>
                     <Badge variant={g.role === 'admin' ? 'primary' : 'muted'}>
                       {g.role || 'member'}
@@ -254,15 +326,21 @@ export const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Right Column: Recent Expenses & Suggested Settlements */}
-        <div className="flex flex-col gap-6">
+        {/* Right Column: Recent Expenses & Debt Minification Suggestions */}
+        <div className="lg:col-span-5 flex flex-col gap-6">
+          {/* Recent Expenses Card */}
           <Card>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-light-foreground dark:text-dark-foreground">
-                Recent Expenses
-              </h3>
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-light-border dark:border-dark-border">
+              <div>
+                <h2 className="text-lg font-bold text-light-foreground dark:text-dark-foreground">
+                  Recent Expenses
+                </h2>
+                <p className="text-xs text-light-muted dark:text-dark-muted">
+                  Latest activity across your groups
+                </p>
+              </div>
               <Button size="sm" variant="ghost" onClick={() => navigate('/expenses')}>
-                View All →
+                View All
               </Button>
             </div>
 
@@ -271,17 +349,24 @@ export const Dashboard = () => {
                 {expensesList.slice(0, 5).map((exp) => (
                   <div
                     key={exp.id}
-                    className="p-3 rounded-card bg-light-surface-secondary dark:bg-dark-surface-secondary border border-light-border dark:border-dark-border flex items-center justify-between text-xs"
+                    className="p-3.5 rounded-card bg-light-surface-secondary dark:bg-dark-surface-secondary border border-light-border dark:border-dark-border flex items-center justify-between text-xs"
                   >
-                    <div>
-                      <p className="font-bold text-light-foreground dark:text-dark-foreground">
-                        {exp.description}
-                      </p>
-                      <p className="text-[11px] text-light-muted dark:text-dark-muted">
-                        {exp.groupName} • Paid by {exp.paid_by_name || 'Member'}
-                      </p>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border flex items-center justify-center text-light-foreground dark:text-dark-foreground">
+                        <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                          <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="font-bold text-light-foreground dark:text-dark-foreground">
+                          {exp.description}
+                        </p>
+                        <p className="text-[11px] text-light-muted dark:text-dark-muted">
+                          {exp.groupName} • Paid by {exp.paid_by_name || 'Member'}
+                        </p>
+                      </div>
                     </div>
-                    <span className="font-extrabold text-light-foreground dark:text-dark-foreground text-sm">
+                    <span className="font-black text-light-foreground dark:text-dark-foreground text-sm">
                       {formatRupees(exp.total_amount)}
                     </span>
                   </div>
@@ -295,34 +380,49 @@ export const Dashboard = () => {
             )}
           </Card>
 
+          {/* Suggested Settlements (Smart Debt Optimization) */}
           <Card>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-light-foreground dark:text-dark-foreground">
-                Suggested Settlements
-              </h3>
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-light-border dark:border-dark-border">
+              <div>
+                <h2 className="text-lg font-bold text-light-foreground dark:text-dark-foreground">
+                  Suggested Settlements
+                </h2>
+                <p className="text-xs text-light-muted dark:text-dark-muted">
+                  Optimized peer-to-peer balance settlements
+                </p>
+              </div>
               <Button size="sm" variant="ghost" onClick={() => navigate('/settlements')}>
-                Details →
+                Details
               </Button>
             </div>
 
             {settlementsList.length > 0 ? (
-              <div className="flex flex-col gap-2.5">
+              <div className="flex flex-col gap-3">
                 {settlementsList.slice(0, 4).map((s, idx) => (
                   <div
                     key={idx}
-                    className="p-3 rounded-card bg-light-surface-secondary/60 dark:bg-dark-surface-secondary/60 border border-light-border dark:border-dark-border text-xs flex items-center justify-between"
+                    className="p-3.5 rounded-card bg-primary/5 dark:bg-primary/10 border border-primary/20 flex items-center justify-between text-xs"
                   >
                     <div>
                       <p className="font-bold text-light-foreground dark:text-dark-foreground">
                         {s.groupName}
                       </p>
                       <p className="text-[11px] text-light-muted dark:text-dark-muted">
-                        Consolidated balance
+                        Consolidated debt balance
                       </p>
                     </div>
-                    <span className="font-bold text-primary text-sm">
-                      {formatRupees(s.amount)}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className="font-extrabold text-primary text-sm">
+                        {formatRupees(s.amount)}
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="primary"
+                        onClick={() => navigate(`/groups/${s.groupId}`)}
+                      >
+                        Settle
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -334,6 +434,7 @@ export const Dashboard = () => {
             )}
           </Card>
         </div>
+
       </div>
     </div>
   );

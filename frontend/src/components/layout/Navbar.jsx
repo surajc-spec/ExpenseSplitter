@@ -16,7 +16,7 @@ export const Navbar = ({ onToggleSidebar }) => {
   ];
 
   return (
-    <header className="sticky top-0 z-navbar bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border px-4 py-3 shadow-card transition-colors">
+    <header className="sticky top-0 z-navbar bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border px-4 sm:px-6 py-3 shadow-card transition-colors">
       <div className="flex items-center justify-between max-w-7xl mx-auto gap-4">
         {/* Left Side: Mobile Sidebar Toggle & Brand Logo */}
         <div className="flex items-center gap-3">
@@ -36,7 +36,7 @@ export const Navbar = ({ onToggleSidebar }) => {
             <img
               src="/favicon2.png"
               alt="EquiSplit Logo"
-              className="w-8 h-8 object-contain transition-transform group-hover:scale-105"
+              className="w-8 h-8 max-w-[32px] max-h-[32px] object-contain transition-transform group-hover:scale-105"
             />
             <span className="text-xl font-extrabold text-light-foreground dark:text-dark-foreground tracking-tight">
               EquiSplit
@@ -70,7 +70,7 @@ export const Navbar = ({ onToggleSidebar }) => {
           <ThemeToggle />
 
           {user ? (
-            <div className="flex items-center gap-2.5 pl-2 border-l border-light-border dark:border-dark-border">
+            <div className="flex items-center gap-2.5 pl-2.5 border-l border-light-border dark:border-dark-border">
               {/* Profile Icon Button */}
               <button
                 onClick={() => navigate('/profile')}
