@@ -647,7 +647,7 @@ const recordSettlement = async (req, res) => {
 
 
         return res.status(500).json({
-            message: "Internal server error"
+            message: error.message || "Internal server error"
         });
 
     } finally {
