@@ -9,9 +9,28 @@ const groupRoutes = require("./routes/group.routes");
 const expenseRoutes = require("./routes/expense.routes");
 const settlementRoutes = require("./routes/settlement.routes");
 const cookieParser = require("cookie-parser");
+
 const app = express();
 
-app.use(cors());
+// Trust proxy for Render / Vercel reverse proxy (for IP rate limiting and secure cookies)
+app.set("trust proxy", 1);
+
+// Configure CORS for cross-domain HTTP-only cookie credentials
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            // Echo back the exact requesting origin (e.g. Vercel domain) to allow credentials mode: 'include'
+            if (origin) {
+                return callback(null, origin);
+            }
+            return callback(null, true);
+        },
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization", "Idempotency-Key"],
+    })
+);
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -28,18 +47,16 @@ app.get("/api/health", async (req, res) => {
             status: "OK",
             message: "Expense Splitter API is running",
             database: "Connected",
-            time: result.rows[0].now
+            time: result.rows[0].now,
         });
     } catch (error) {
         console.error("Database error:", error);
 
         res.status(500).json({
             status: "ERROR",
-            message: "Database connection failed"
+            message: "Database connection failed",
         });
     }
 });
-
-
 
 module.exports = app;

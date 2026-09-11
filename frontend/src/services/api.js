@@ -3,7 +3,12 @@
  * Handles credentials, headers, JSON parsing, error handling, rate limiting (HTTP 429), and idempotency.
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const getApiBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL || '/api';
+  return envUrl.endsWith('/') ? envUrl.slice(0, -1) : envUrl;
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 class ApiError extends Error {
   constructor(message, status, data = {}) {
