@@ -177,11 +177,9 @@ export const GroupDetails = () => {
             + Add Expense
           </Button>
 
-          {isAdmin && (
-            <Button variant="secondary" size="md" onClick={() => setIsAddMemberOpen(true)}>
-              + Add Member
-            </Button>
-          )}
+          <Button variant="secondary" size="md" onClick={() => setIsAddMemberOpen(true)}>
+            + Add Member
+          </Button>
 
           {!isOwner && (
             <Button variant="secondary" size="md" onClick={handleLeaveGroup}>
@@ -346,11 +344,9 @@ export const GroupDetails = () => {
                   Transfer Ownership
                 </Button>
               )}
-              {isAdmin && (
-                <Button size="sm" variant="primary" onClick={() => setIsAddMemberOpen(true)}>
-                  + Add Member
-                </Button>
-              )}
+              <Button size="sm" variant="primary" onClick={() => setIsAddMemberOpen(true)}>
+                + Add Member
+              </Button>
             </div>
           </div>
 

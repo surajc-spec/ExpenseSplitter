@@ -68,7 +68,7 @@ const addMember = async (req, res) => {
         const userId = req.user.userId;
 
        
-        const adminCheck = await pool.query(
+        const memberCheck = await pool.query(
             `SELECT role
              FROM group_members
              WHERE group_id = $1
@@ -76,15 +76,9 @@ const addMember = async (req, res) => {
             [groupId, userId]
         );
 
-        if (adminCheck.rows.length === 0) {
+        if (memberCheck.rows.length === 0) {
             return res.status(403).json({
-                message: "You are not a member of this group"
-            });
-        }
-
-        if (adminCheck.rows[0].role !== "admin") {
-            return res.status(403).json({
-                message: "Only group admins can add members"
+                message: "You must be a member of this group to add members"
             });
         }
 
