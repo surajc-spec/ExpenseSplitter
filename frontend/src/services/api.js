@@ -23,20 +23,26 @@ class ApiError extends Error {
 const request = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
   
+  const { headers: customHeaders, body: rawBody, ...restOptions } = options;
+
   const headers = {
     'Content-Type': 'application/json',
-    ...options.headers,
+    ...(customHeaders || {}),
   };
 
   const config = {
-    method: options.method || 'GET',
-    headers,
+    method: 'GET',
     credentials: 'include', // Always include HTTP-only cookies
-    ...options,
+    ...restOptions,
+    headers,
   };
 
-  if (options.body && typeof options.body === 'object') {
-    config.body = JSON.stringify(options.body);
+  if (rawBody !== undefined) {
+    if (typeof rawBody === 'object') {
+      config.body = JSON.stringify(rawBody);
+    } else {
+      config.body = rawBody;
+    }
   }
 
   try {

@@ -135,11 +135,12 @@ const recordSettlement = async (req, res) => {
         const { groupId } = req.params;
         const userId = req.user.userId;
 
+        const body = req.body || {};
         const {
             fromUser,
             toUser,
             amount
-        } = req.body;
+        } = body;
 
 
        
